@@ -1,18 +1,33 @@
-package br.com.app.model;
+package br.com.app.domain;
 
 import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Movie {
 	
+	@Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
+	@Column
 	private int year;
+	@Column
 	private String title;
-	private List<String> studios;
-	private List<String> producers;
+	@OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = false)
+	private List<Studio> studios;
+	@OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = false)
+	private List<Producer> producers;
+	@Column
 	private boolean winner;
 	
-	private Movie(int year, String title, List<String> studios, List<String> producers, boolean winner) {
+	private Movie(int year, String title, List<Studio> studios, List<Producer> producers, boolean winner) {
 		this.year = year;
 		this.title = title;
 		this.studios = studios;
@@ -20,9 +35,14 @@ public class Movie {
 		this.winner = winner;
 	}
 	
-	public Movie() {
+	public Long getId() {
+		return id;
 	}
-		
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
 	public int getYear() {
 		return year;
 	}
@@ -39,19 +59,19 @@ public class Movie {
 		this.title = title;
 	}
 	
-	public List<String> getStudios() {
+	public List<Studio> getStudios() {
 		return studios;
 	}
 	
-	public void setStudios(List<String> studios) {
+	public void setStudios(List<Studio> studios) {
 		this.studios = studios;
 	}
 	
-	public List<String> getProducers() {
+	public List<Producer> getProducers() {
 		return producers;
 	}
 	
-	public void setProducers(List<String> producers) {
+	public void setProducers(List<Producer> producers) {
 		this.producers = producers;
 	}
 	
@@ -63,12 +83,11 @@ public class Movie {
 		this.winner = winner;
 	}
 
-	
 	public static class MovieBuilder {
 		private int year;
 		private String title;
-		private List<String> studios;
-		private List<String> producers;
+		private List<Studio> studios;
+		private List<Producer> producers;
 		private boolean winner;
 	
 		public MovieBuilder year(int year) {
@@ -81,12 +100,12 @@ public class Movie {
 			return this;
 		}
 		
-		public MovieBuilder studios(List<String> studios) {
+		public MovieBuilder studios(List<Studio> studios) {
 			this.studios = studios;
 			return this;
 		}
 		
-		public MovieBuilder producers(List<String> producers) {
+		public MovieBuilder producers(List<Producer> producers) {
 			this.producers = producers;
 			return this;
 		}

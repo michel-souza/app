@@ -3,9 +3,9 @@ package br.com.app.repository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import br.com.app.domain.Movie;
+import br.com.app.domain.Studio;
 
 @Repository
-public interface MovieRepository extends CrudRepository<Movie,Long> {
-
+public interface StudioRepository extends CrudRepository<Studio, Long> {
+		
 }
