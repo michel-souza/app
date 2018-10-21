@@ -1,12 +1,14 @@
 package br.com.app.domain;
 
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Studio {
@@ -16,7 +18,10 @@ public class Studio {
 	private Long id;
 	@Column
 	private String name;
-	private List<Movie> movies;
+	@ManyToOne
+	@JoinColumn(name = "movie_id", nullable = true)
+	@JsonIgnore
+	private Movie movie;
 	@Column
 	private boolean winner;
 	
@@ -28,19 +33,19 @@ public class Studio {
 		this.id = id;
 	}
 	
-	public List<Movie> getMovies() {
-		return movies;
+	public Movie getMovie() {
+		return movie;
 	}
 	
-	public void setMovies(List<Movie> movies) {
-		this.movies = movies;
+	public void setMovie(Movie movie) {
+		this.movie = movie;
 	}
 	
-	private boolean isWinner() {
+	public boolean isWinner() {
 		return winner;
 	}
 	
-	private void setWinner(boolean winner) {
+	public void setWinner(boolean winner) {
 		this.winner = winner;
 	}
 

@@ -1,7 +1,5 @@
 package br.com.app.domain;
 
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,7 +19,7 @@ public class Producer {
 	@Column
 	private String name;
 	@ManyToOne
-	@JoinColumn(name = "movie_id", nullable = false)
+	@JoinColumn(name = "movie_id", nullable = true)
 	@JsonIgnore
 	private Movie movie;
 	

@@ -8,9 +8,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
 @Entity
+@NamedQueries({@NamedQuery(name = "Movie.findWinnerByYear", query = "select m from Movie m where m.winner = 'Y' and year = ?1"),
+@NamedQuery(name = "Movie.countYearByWinner", query = "select count(m), year from Movie m where m.winner = 'Y' group by year")})
 public class Movie {
 	
 	@Id
@@ -33,6 +37,10 @@ public class Movie {
 		this.studios = studios;
 		this.producers = producers;
 		this.winner = winner;
+	}
+	
+	public Movie() {
+		// TODO Auto-generated constructor stub
 	}
 	
 	public Long getId() {
@@ -110,7 +118,8 @@ public class Movie {
 			return this;
 		}
 		
-		public MovieBuilder winner(boolean winner){
+		public MovieBuilder winner(boolean winner) {
+			this.studios.forEach(std -> std.setWinner(winner));
 			this.winner = winner;
 			return this;
 		}

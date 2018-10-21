@@ -26,6 +26,10 @@ public class MovieService {
 		delete(movie.getId());
 	}
 	
+	public List<Movie> getWinnerByYear(int year) {
+		return movieRepository.findWinnerByYear(year);
+	}
+	
 	private void delete(Long id) {		
 		this.movieRepository.deleteById(id);
 	}
@@ -42,10 +46,5 @@ public class MovieService {
 		
 		return movies;
 	}
-	
-	public List<Movie> getMoviesByYear(int year) {
-		List<Movie> moviesByYear = new ArrayList<>();
 		
-		return moviesByYear;
-	}
 }
