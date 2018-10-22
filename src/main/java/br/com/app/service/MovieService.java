@@ -7,11 +7,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.app.domain.FilmeVencedorException;
 import br.com.app.domain.Movie;
-import br.com.app.domain.StudioWinnerCount;
 import br.com.app.domain.WinnersByYear;
+import br.com.app.repository.GetDataRepository;
 import br.com.app.repository.MovieRepository;
-import br.com.app.repository.WinnersByYearRepository;
 
 @Service
 public class MovieService {
@@ -19,15 +19,19 @@ public class MovieService {
 	@Autowired
 	private MovieRepository movieRepository;
 	@Autowired
-	private WinnersByYearRepository winnersByYearRepository;
+	private GetDataRepository getDataRepository;
 	
 	public Movie save(Movie movie) {
 		return this.movieRepository.save(movie);
 	}
 	
-	public void delete(Movie movie) throws Exception {
+	public Movie findByTitle(String title) {
+		return movieRepository.findByTitle(title);
+	}
+	
+	public void delete(Movie movie) throws FilmeVencedorException {
 		if (movie.isWinner())
-			throw new Exception("Filmes vencedores não podem ser excluidos!");
+			throw new FilmeVencedorException();
 		delete(movie.getId());
 	}
 	
@@ -53,11 +57,7 @@ public class MovieService {
 	}
 	
 	public List<WinnersByYear> getWinnersByYear() {
-		return winnersByYearRepository.getWinnersByYear();
-	}
-	
-	public List<StudioWinnerCount> getStudiosWinners() {
-		return winnersByYearRepository.getStudiosByCountWinner();
-	}
+		return getDataRepository.getWinnersByYear();
+	}		
 		
 }

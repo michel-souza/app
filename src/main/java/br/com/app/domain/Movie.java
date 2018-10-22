@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @NamedQueries({@NamedQuery(name = "Movie.findWinnerByYear", query = "select m from Movie m where m.winner = 'Y' and year = ?1")})
@@ -19,13 +20,15 @@ public class Movie {
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	@Column
+	@Column(nullable = false)
+	@NotNull
 	private int year;
-	@Column
+	@Column(nullable = false)
+	@NotNull
 	private String title;
-	@OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = false)
+	@OneToMany(mappedBy = "movie", cascade = CascadeType.MERGE, orphanRemoval = false)
 	private List<Studio> studios;
-	@OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = false)
+	@OneToMany(mappedBy = "movie", cascade = CascadeType.MERGE, orphanRemoval = false)
 	private List<Producer> producers;
 	@Column
 	private boolean winner;

@@ -12,5 +12,6 @@ public interface MovieRepository extends CrudRepository<Movie,Long> {
 	
 	public List<Movie> findWinnerByYear(int year);
 	
+	public Movie findByTitle(String title);
 
 }

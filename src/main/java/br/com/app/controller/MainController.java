@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import br.com.app.domain.Movie;
 import br.com.app.domain.Movie.MovieBuilder;
 import br.com.app.domain.Producer;
+import br.com.app.domain.ProducerIntervalWinner;
 import br.com.app.domain.Studio;
 import br.com.app.domain.StudioWinnerCount;
 import br.com.app.domain.WinnersByYear;
@@ -45,7 +46,7 @@ public class MainController {
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new Exception("Erro ao carregar arquivo: " + e.getMessage());
-		}
+		}		
 		for (String movie : movies) {
 			String[] split = movie.split(";");
 			boolean winner = false;
@@ -55,16 +56,15 @@ public class MainController {
 			if (split.length > 4)
 				winner = Boolean.valueOf(StringUtils.isNotBlank(split[4]));
 			List<Studio> studios = generateStudio(Arrays.asList(split[2].split(",")), winner);
-			List<Producer> producers = generateProducer(Arrays.asList(split[3].split(",")));
+			List<Producer> producers = generateProducer(Arrays.asList(split[3].split(",|\\ and")));
 			Movie filme = builder.year(Integer.valueOf(year)).title(title).studios(studios).producers(producers)
 					.winner(winner).build();
-
-			movieService.save(filme);
-
-			studios.forEach(std -> updateMovieFromStudio(filme, std));
-			producers.forEach(prod -> updateMovieFromProducer(filme, prod));
-		}
-
+			if (movieService.findByTitle(title) == null) {
+				movieService.save(filme);
+				studios.forEach(std -> updateMovieFromStudio(filme, std));
+				producers.forEach(prod -> updateMovieFromProducer(filme, prod));
+			}
+		}		
 		return "Arquivo carregado com sucesso";
 	}
 
@@ -80,7 +80,12 @@ public class MainController {
 
 	@RequestMapping(value = "/winners/studio", method = RequestMethod.GET)
 	public @ResponseBody List<StudioWinnerCount> getStudiosWinners() {
-		return movieService.getStudiosWinners();
+		return studioService.getStudiosWinners();
+	}
+	
+	@RequestMapping(value = "/winners/producer/interval", method = RequestMethod.GET)
+	public @ResponseBody ProducerIntervalWinner getIntervalProducersWinners() {
+		return producerService.getProducersWinners();
 	}
 
 	private void updateMovieFromStudio(Movie filme, Studio std) {
@@ -110,10 +115,11 @@ public class MainController {
 	}
 
 	private List<Producer> generateProducer(List<String> producers) {
-		List<Producer> listProducers = new ArrayList<>();
+		List<Producer> listProducers = new ArrayList<>();		
+		
 		for (String producer : producers) {
 			Producer prod = new Producer();
-			prod.setName(producer);
+			prod.setName(producer.trim());
 			listProducers.add(prod);
 		}
 		return listProducers;
