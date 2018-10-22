@@ -7,5 +7,7 @@ import br.com.app.domain.Studio;
 
 @Repository
 public interface StudioRepository extends CrudRepository<Studio, Long> {
+	
+	public Studio getStudioByName(String name);
 			
 }

@@ -13,8 +13,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
 @Entity
-@NamedQueries({@NamedQuery(name = "Movie.findWinnerByYear", query = "select m from Movie m where m.winner = 'Y' and year = ?1"),
-@NamedQuery(name = "Movie.countYearByWinner", query = "select count(m), year from Movie m where m.winner = 'Y' group by year")})
+@NamedQueries({@NamedQuery(name = "Movie.findWinnerByYear", query = "select m from Movie m where m.winner = 'Y' and year = ?1")})
 public class Movie {
 	
 	@Id

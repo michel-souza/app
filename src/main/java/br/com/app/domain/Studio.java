@@ -8,9 +8,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.NamedQuery;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
+@NamedQuery(name = "studio.getStudioByName", query = "select s from Studio s where lower(s.name) = lower(?1)")
 public class Studio {
 	
 	@Id

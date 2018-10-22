@@ -17,6 +17,10 @@ public class StudioService {
 	public Studio save(Studio studio) {
 		return studioRepository.save(studio);
 	}
+	
+	public Studio getStudioByName(String name) {
+		return studioRepository.getStudioByName(name);
+	}
 
 	
 	
