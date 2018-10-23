@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
+import javax.websocket.server.PathParam;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import br.com.app.domain.FilmeVencedorException;
 import br.com.app.domain.Movie;
 import br.com.app.domain.Movie.MovieBuilder;
 import br.com.app.domain.Producer;
@@ -61,8 +64,6 @@ public class MainController {
 					.winner(winner).build();
 			if (movieService.findByTitle(title) == null) {
 				movieService.save(filme);
-				studios.forEach(std -> updateMovieFromStudio(filme, std));
-				producers.forEach(prod -> updateMovieFromProducer(filme, prod));
 			}
 		}		
 		return "Arquivo carregado com sucesso";
@@ -87,15 +88,11 @@ public class MainController {
 	public @ResponseBody ProducerIntervalWinner getIntervalProducersWinners() {
 		return producerService.getProducersWinners();
 	}
-
-	private void updateMovieFromStudio(Movie filme, Studio std) {
-		std.setMovie(filme);
-		studioService.save(std);
-	}
-
-	private void updateMovieFromProducer(Movie filme, Producer producer) {
-		producer.setMovie(filme);
-		producerService.save(producer);
+	
+	@RequestMapping(value = "/movie/del", method = RequestMethod.DELETE)
+	public @ResponseBody String deleteMovie(@PathParam("id") String id) throws FilmeVencedorException {
+		movieService.delete(Long.valueOf(id));
+		return "Filme deletado com sucesso!";
 	}
 
 	private List<Studio> generateStudio(List<String> studios, boolean winner) {
@@ -106,7 +103,8 @@ public class MainController {
 				Studio std = new Studio();
 				std.setName(studio);
 				std.setWinner(winner);
-				listStudios.add(std);
+				Studio save = studioService.save(std);
+				listStudios.add(save);				
 			} else {
 				listStudios.add(studioByName);
 			}
@@ -120,7 +118,8 @@ public class MainController {
 		for (String producer : producers) {
 			Producer prod = new Producer();
 			prod.setName(producer.trim());
-			listProducers.add(prod);
+			Producer save = producerService.save(prod);
+			listProducers.add(save);
 		}
 		return listProducers;
 	}

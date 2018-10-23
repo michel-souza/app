@@ -45,7 +45,7 @@ public class ServiceTest {
 		studio.setName("teste");
 		studio.setWinner(true);
 		Movie movie = movieService.save(generateMovie());
-		studio.setMovie(movie);
+		studio.addMovie(movie);
 		Studio save = studioService.save(studio);
 		assertNotNull(save);
 	}
@@ -55,7 +55,7 @@ public class ServiceTest {
 		Producer producer = new Producer();
 		producer.setName("teste");
 		Movie movie = movieService.save(generateMovie());
-		producer.setMovie(movie);
+		producer.addMovie(movie);
 		Producer save = producerService.save(producer);
 		assertNotNull(save);
 	}
@@ -64,7 +64,7 @@ public class ServiceTest {
 	public void naoDeveExcluirFilmeVencedor() throws FilmeVencedorException {
 		Movie movie = movieService.save(generateMovie());
 		try {
-			movieService.delete(movie);
+			movieService.delete(movie.getId());
 		} catch (Exception e) {
 			assertEquals("Filmes vencedores não podem ser excluidos!", e.getMessage());		
 			throw e;

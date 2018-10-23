@@ -22,25 +22,26 @@ public class MovieService {
 	private GetDataRepository getDataRepository;
 	
 	public Movie save(Movie movie) {
+		movie.getStudios().forEach(std -> std.addMovie(movie));
+		movie.getProducers().forEach(prd -> prd.addMovie(movie));
 		return this.movieRepository.save(movie);
 	}
 	
 	public Movie findByTitle(String title) {
 		return movieRepository.findByTitle(title);
 	}
-	
-	public void delete(Movie movie) throws FilmeVencedorException {
-		if (movie.isWinner())
-			throw new FilmeVencedorException();
-		delete(movie.getId());
-	}
-	
+			
 	public List<Movie> getWinnerByYear(int year) {
 		return movieRepository.findWinnerByYear(year);
 	}
 	
-	private void delete(Long id) {		
-		this.movieRepository.deleteById(id);
+	public void delete(Long id) throws FilmeVencedorException {
+		Optional<Movie> movie = movieRepository.findById(id);
+		if (movie.isPresent()) {
+			if (movie.get().isWinner())
+				throw new FilmeVencedorException();
+			this.movieRepository.deleteById(id);
+		}
 	}
 	
 	public Optional<Movie> get(Long id) {

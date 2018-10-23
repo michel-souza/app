@@ -1,18 +1,23 @@
 package br.com.app.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.NamedQuery;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
+@Table(name = "studio")
 @NamedQuery(name = "studio.getStudioByName", query = "select s from Studio s where lower(s.name) = lower(?1)")
 public class Studio {
 	
@@ -21,10 +26,9 @@ public class Studio {
 	private Long id;
 	@Column
 	private String name;
-	@ManyToOne
-	@JoinColumn(name = "movie_id", nullable = true)
+	@ManyToMany(mappedBy = "studios", cascade = CascadeType.ALL)
 	@JsonIgnore
-	private Movie movie;
+	private List<Movie> movies = new ArrayList<>();
 	@Column
 	private boolean winner;
 	
@@ -36,12 +40,16 @@ public class Studio {
 		this.id = id;
 	}
 	
-	public Movie getMovie() {
-		return movie;
+	public List<Movie> getMovies() {
+		return movies;
 	}
 	
-	public void setMovie(Movie movie) {
-		this.movie = movie;
+	public void setMovies(List<Movie> movies) {
+		this.movies = movies;
+	}
+	
+	public void addMovie(Movie movie) {
+		this.movies.add(movie);
 	}
 	
 	public boolean isWinner() {

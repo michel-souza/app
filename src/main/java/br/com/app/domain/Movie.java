@@ -8,12 +8,16 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@Table(name = "movie")
 @NamedQueries({@NamedQuery(name = "Movie.findWinnerByYear", query = "select m from Movie m where m.winner = 'Y' and year = ?1")})
 public class Movie {
 	
@@ -26,9 +30,11 @@ public class Movie {
 	@Column(nullable = false)
 	@NotNull
 	private String title;
-	@OneToMany(mappedBy = "movie", cascade = CascadeType.MERGE, orphanRemoval = false)
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "studio_movie", joinColumns={@JoinColumn(name="movie_id")}, inverseJoinColumns={@JoinColumn(name="studio_id",nullable = true)})
 	private List<Studio> studios;
-	@OneToMany(mappedBy = "movie", cascade = CascadeType.MERGE, orphanRemoval = false)
+	@ManyToMany
+	@JoinTable(name = "producer_movie", joinColumns={@JoinColumn(name="movie_id")}, inverseJoinColumns={@JoinColumn(name="producer_id",nullable = true)})
 	private List<Producer> producers;
 	@Column
 	private boolean winner;
@@ -42,7 +48,6 @@ public class Movie {
 	}
 	
 	public Movie() {
-		// TODO Auto-generated constructor stub
 	}
 	
 	public Long getId() {
