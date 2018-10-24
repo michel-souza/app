@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import br.com.app.domain.FilmeVencedorException;
 import br.com.app.domain.Movie;
 import br.com.app.domain.Movie.MovieBuilder;
 import br.com.app.domain.Producer;
@@ -90,7 +89,7 @@ public class MainController {
 	}
 	
 	@RequestMapping(value = "/movie/del", method = RequestMethod.DELETE)
-	public @ResponseBody String deleteMovie(@PathParam("id") String id) throws FilmeVencedorException {
+	public @ResponseBody String deleteMovie(@PathParam("id") String id) throws Exception {
 		movieService.delete(Long.valueOf(id));
 		return "Filme deletado com sucesso!";
 	}

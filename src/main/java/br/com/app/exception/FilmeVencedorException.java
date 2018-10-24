@@ -1,4 +1,4 @@
-package br.com.app.domain;
+package br.com.app.exception;
 
 public class FilmeVencedorException extends Exception {
 

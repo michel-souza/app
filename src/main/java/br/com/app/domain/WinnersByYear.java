@@ -2,23 +2,23 @@ package br.com.app.domain;
 
 public class WinnersByYear {
 	
-	private Long count;
+	private Long winnerCount;
 	private int year;
 	
 	public WinnersByYear() {
 	}
 	
 	public WinnersByYear(int year, Long count) {
-		this.count = count;
+		this.winnerCount = count;
 		this.year = year;
 	}
 
-	public Long getCount() {
-		return count;
+	public Long getWinnerCount() {
+		return winnerCount;
 	}
 
-	public void setCount(Long count) {
-		this.count = count;
+	public void setWinnerCount(Long winnercount) {
+		this.winnerCount = winnercount;
 	}
 
 	public int getYear() {

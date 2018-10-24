@@ -30,7 +30,7 @@ public class Movie {
 	@Column(nullable = false)
 	@NotNull
 	private String title;
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany
 	@JoinTable(name = "studio_movie", joinColumns={@JoinColumn(name="movie_id")}, inverseJoinColumns={@JoinColumn(name="studio_id",nullable = true)})
 	private List<Studio> studios;
 	@ManyToMany

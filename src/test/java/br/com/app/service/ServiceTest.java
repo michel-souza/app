@@ -12,14 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import br.com.app.domain.FilmeVencedorException;
 import br.com.app.domain.Movie;
 import br.com.app.domain.Movie.MovieBuilder;
 import br.com.app.domain.Producer;
 import br.com.app.domain.Studio;
-import br.com.app.service.MovieService;
-import br.com.app.service.ProducerService;
-import br.com.app.service.StudioService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
@@ -60,8 +56,8 @@ public class ServiceTest {
 		assertNotNull(save);
 	}
 	
-	@Test(expected = FilmeVencedorException.class)	
-	public void naoDeveExcluirFilmeVencedor() throws FilmeVencedorException {
+	@Test(expected = Exception.class)	
+	public void naoDeveExcluirFilmeVencedor() throws Exception {
 		Movie movie = movieService.save(generateMovie());
 		try {
 			movieService.delete(movie.getId());

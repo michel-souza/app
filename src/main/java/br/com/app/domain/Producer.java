@@ -3,7 +3,6 @@ package br.com.app.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,7 +22,7 @@ public class Producer {
 	private Long id;	
 	@Column
 	private String name;
-	@ManyToMany(mappedBy = "producers", cascade = CascadeType.ALL)
+	@ManyToMany(mappedBy = "producers")
 	@JsonIgnore
 	private List<Movie> movies = new ArrayList<>();
 	

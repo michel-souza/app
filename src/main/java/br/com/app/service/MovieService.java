@@ -7,9 +7,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.app.domain.FilmeVencedorException;
 import br.com.app.domain.Movie;
 import br.com.app.domain.WinnersByYear;
+import br.com.app.exception.FilmeNaoEncontradoException;
+import br.com.app.exception.FilmeVencedorException;
 import br.com.app.repository.GetDataRepository;
 import br.com.app.repository.MovieRepository;
 
@@ -35,12 +36,14 @@ public class MovieService {
 		return movieRepository.findWinnerByYear(year);
 	}
 	
-	public void delete(Long id) throws FilmeVencedorException {
+	public void delete(Long id) throws Exception {
 		Optional<Movie> movie = movieRepository.findById(id);
 		if (movie.isPresent()) {
 			if (movie.get().isWinner())
 				throw new FilmeVencedorException();
 			this.movieRepository.deleteById(id);
+		} else {
+			throw new FilmeNaoEncontradoException();
 		}
 	}
 	

@@ -2,23 +2,23 @@ package br.com.app.domain;
 
 public class StudioWinnerCount {
 	
-	private Long winnerCount;
+	private Long winCount;
 	private String name;
 	
 	public StudioWinnerCount() {
 	}
 	
-	public StudioWinnerCount(String name, Long winnerCount) {
+	public StudioWinnerCount(String name, Long winCount) {
 		this.name = name;
-		this.winnerCount = winnerCount;
+		this.winCount = winCount;
 	}
 
-	public Long getWinnerCount() {
-		return winnerCount;
+	public Long getWinCount() {
+		return winCount;
 	}
 
-	public void setWinnerCount(Long winnerCount) {
-		this.winnerCount = winnerCount;
+	public void setWinCount(Long winCount) {
+		this.winCount = winCount;
 	}
 
 	public String getName() {

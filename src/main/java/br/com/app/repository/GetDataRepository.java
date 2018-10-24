@@ -17,12 +17,12 @@ public interface GetDataRepository extends CrudRepository<Movie, Long> {
 	public List<WinnersByYear> getWinnersByYear();
 
 	@Query("Select new br.com.app.domain.StudioWinnerCount(s.name, count(s)) \r\n" + "  from Movie m\r\n"
-			+ " inner join Studio s \r\n"
-			+ " where m.winner = 'Y'\r\n" + " group by s.name")
+			+ " inner join m.studios s \r\n"
+			+ " where m.winner = 'Y'\r\n" + " group by s.name order by count(s) desc")
 	public List<StudioWinnerCount> getStudiosByCountWinner();
 
 	@Query("select new br.com.app.domain.ProducerWinner(p.name, m.year) from Movie m"			
-			+ " inner join Producer p where m.winner = 'Y' order by m.year")
+			+ " inner join m.producers p where m.winner = 'Y' order by m.year")
 	public List<ProducerWinner> getProducersWinners();
 
 }

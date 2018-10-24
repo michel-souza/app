@@ -29,6 +29,6 @@ após iniciado a aplicação, acessar via browser o url
                
 # Para Remover um filme 
 
-  - acessar a url http://localhost:8080/textoit/movie/del/{id}
-    - no qual {id} é a chave primaria do registro desejado
+  - acessar a url http://localhost:8080/textoit/movie/del/
+    - no qual deve se informar o id desejado para remoção como parametro
     - caso seja um filme vencedor, o mesmo não deverá ser excluido.
