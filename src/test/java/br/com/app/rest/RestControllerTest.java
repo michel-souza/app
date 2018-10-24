@@ -88,7 +88,7 @@ public class RestControllerTest extends AppApplicationTests {
 	}
 
 	@Test
-	public void testaDeleteMovieIsOK() throws Exception {
+	public void testaDeleteMovieFilmeVencedor() throws Exception {
 		carregaBase();
 		this.mockMvc.perform(MockMvcRequestBuilders.delete("/textoit/movie/del").param("id", "7"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
@@ -96,7 +96,7 @@ public class RestControllerTest extends AppApplicationTests {
 	}
 
 	@Test(expected = FilmeVencedorException.class)
-	public void testaDeleteMovieFilmeVencedor() throws Throwable {
+	public void testaDeleteMovieIsOK() throws Throwable {
 		try {
 			carregaBase();
 			this.mockMvc.perform(MockMvcRequestBuilders.delete("/textoit/movie/del").param("id", "3"));
