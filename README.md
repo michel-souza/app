@@ -14,7 +14,7 @@ $ java -jar app-0.0.1-SNAPSHOT.jar
 ```
 após iniciado a aplicação, acessar via browser o url
   - http://localhost:8080/textoit/
-  Ao acessar a url o sistema ira popular a base de dados com o arquivo **movielist.csv**
+  - Ao acessar a url o sistema ira popular a base de dados com o arquivo **movielist.csv**
 
 # Para Obter o(s) vencedor(es), informando um ano
 
