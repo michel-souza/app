@@ -28,9 +28,7 @@ public class Studio {
 	private String name;
 	@ManyToMany(mappedBy = "studios", fetch = FetchType.EAGER)
 	@JsonIgnore
-	private List<Movie> movies = new ArrayList<>();
-	@Column
-	private boolean winner;
+	private List<Movie> movies = new ArrayList<>();	
 	
 	public Long getId() {
 		return id;
@@ -52,14 +50,6 @@ public class Studio {
 		this.movies.add(movie);
 	}
 	
-	public boolean isWinner() {
-		return winner;
-	}
-	
-	public void setWinner(boolean winner) {
-		this.winner = winner;
-	}
-
 	public String getName() {
 		return name;
 	}

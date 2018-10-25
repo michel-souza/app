@@ -39,7 +39,6 @@ public class ServiceTest {
 	public void deveSalvarStudio() {
 		Studio studio = new Studio();
 		studio.setName("teste");
-		studio.setWinner(true);
 		Movie movie = movieService.save(generateMovie());
 		studio.addMovie(movie);
 		Studio save = studioService.save(studio);
@@ -88,7 +87,6 @@ public class ServiceTest {
 		List<Studio> studios = new ArrayList<>();
 		Studio studio = new Studio();
 		studio.setName("teste");
-		studio.setWinner(true);
 		studioService.save(studio);
 		studios.add(studio);
 		return studios;

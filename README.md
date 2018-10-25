@@ -1,10 +1,16 @@
 # APP
 
-Para executar a app, deve-se iniciar o arquivo jar 
+Para executar a app, deve-se executar o comando.
 
 ```sh
 $ cd pastaOrigem
-$ java -jar app.jar
+$ mvn clean install
+```
+após iniciar a app pelo arquivo jar
+
+```sh
+$ cd pastaOrigem/target 
+$ java -jar app-0.0.1-SNAPSHOT.jar
 ```
 após iniciado a aplicação, acessar via browser o url
   - http://localhost:8080/textoit/

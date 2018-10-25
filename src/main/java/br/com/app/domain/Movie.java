@@ -125,7 +125,6 @@ public class Movie {
 		}
 		
 		public MovieBuilder winner(boolean winner) {
-			this.studios.forEach(std -> std.setWinner(winner));
 			this.winner = winner;
 			return this;
 		}

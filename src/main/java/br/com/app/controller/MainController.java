@@ -1,12 +1,11 @@
 package br.com.app.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 import javax.websocket.server.PathParam;
 
@@ -41,14 +40,10 @@ public class MainController {
 	private ProducerService producerService;
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public @ResponseBody String index() throws Exception {
+	public @ResponseBody String index() {
 		List<String> movies = new ArrayList<>();
-		try {
 			popularListaComDadosDoArquivo(movies);
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new Exception("Erro ao carregar arquivo: " + e.getMessage());
-		}		
+		
 		for (String movie : movies) {
 			String[] split = movie.split(";");
 			boolean winner = false;
@@ -57,7 +52,7 @@ public class MainController {
 			String title = split[1];
 			if (split.length > 4)
 				winner = Boolean.valueOf(StringUtils.isNotBlank(split[4]));
-			List<Studio> studios = generateStudio(Arrays.asList(split[2].split(",")), winner);
+			List<Studio> studios = generateStudio(Arrays.asList(split[2].split(",")));
 			List<Producer> producers = generateProducer(Arrays.asList(split[3].split(",|\\ and")));
 			Movie filme = builder.year(Integer.valueOf(year)).title(title).studios(studios).producers(producers)
 					.winner(winner).build();
@@ -94,14 +89,13 @@ public class MainController {
 		return "Filme deletado com sucesso!";
 	}
 
-	private List<Studio> generateStudio(List<String> studios, boolean winner) {
+	private List<Studio> generateStudio(List<String> studios) {
 		List<Studio> listStudios = new ArrayList<>();
 		for (String studio : studios) {
 			Studio studioByName = studioService.getStudioByName(studio);
 			if (studioByName == null) {
 				Studio std = new Studio();
 				std.setName(studio);
-				std.setWinner(winner);
 				Studio save = studioService.save(std);
 				listStudios.add(save);				
 			} else {
@@ -123,11 +117,18 @@ public class MainController {
 		return listProducers;
 	}
 
-	private void popularListaComDadosDoArquivo(List<String> movies) throws IOException {
-		File f = new File(this.getClass().getClassLoader().getResource("files/movielist.csv").getFile());
-		Stream<String> lines = Files.lines(f.toPath());
-		lines.forEach(line -> movies.add(line));
-		lines.close();
+	private void popularListaComDadosDoArquivo(List<String> movies) {
+		
+		try(InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream("files/movielist.csv");
+				BufferedReader reader = new BufferedReader(new InputStreamReader(resourceAsStream));) {
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				movies.add(line);			
+			}		 		 
+			
+		} catch (Exception e) {			
+			e.printStackTrace();
+		}		
 		movies.remove(0);
 	}
 
