@@ -29,7 +29,7 @@ import br.com.app.service.ProducerService;
 import br.com.app.service.StudioService;
 
 @Controller
-@RequestMapping(value = "/textoit")
+@RequestMapping(value = "/texoit")
 public class MainController {
 
 	@Autowired
