@@ -5,6 +5,9 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -17,40 +20,36 @@ import br.com.app.exception.FilmeNaoEncontradoException;
 import br.com.app.exception.FilmeVencedorException;
 
 @Transactional
+@Rollback
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 public class RestControllerTest extends AppApplicationTests {
 
 	private MockMvc mockMvc;
 
 	@Autowired
 	private MainController mainController;
-
+	
 	@Before
-	public void setUp() {
-		this.mockMvc = MockMvcBuilders.standaloneSetup(mainController).build();
-	}
-
 	@Test
-	public void carregaArquivoTest() throws Exception {
+	public void setUp() throws Exception {
+		this.mockMvc = MockMvcBuilders.standaloneSetup(mainController).build();
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/textoit/")).andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.content().string("Arquivo carregado com sucesso"));
 	}
 
 	@Test
 	public void testaGetWinnersByYear() throws Exception {
-		carregaBase();
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/textoit/winners/1986"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.content()
-						.string("[{\"id\":792,\"year\":1986,\"title\":\"Howard the Duck\",\"studios\":[{\"id\":713,\"name\":\"Universal Studios\",\"winner\":false}],"
-								+ "\"producers\":[{\"id\":791,\"name\":\"Gloria Katz\"}],\"winner\":true},{\"id\":796,\"year\":1986,"
-								+ "\"title\":\"Under the Cherry Moon\",\"studios\":[{\"id\":760,\"name\":\"Warner Bros.\",\"winner\":false}],"
-								+ "\"producers\":[{\"id\":793,\"name\":\"Bob Cavallo\"},{\"id\":794,\"name\":\"Joe Ruffalo\"},"
-								+ "{\"id\":795,\"name\":\"Steve Fargnoli\"}],\"winner\":true}]"));
+						.string("[{\"id\":93,\"year\":1986,\"title\":\"Howard the Duck\",\"studios\":[{\"id\":14,\"name\":\"Universal Studios\",\"winner\":false}],"
+								+ "\"producers\":[{\"id\":92,\"name\":\"Gloria Katz\"}],\"winner\":true},{\"id\":97,\"year\":1986,\"title\":\"Under the Cherry Moon\","
+								+ "\"studios\":[{\"id\":61,\"name\":\"Warner Bros.\",\"winner\":false}],\"producers\":[{\"id\":94,\"name\":\"Bob Cavallo\"},"
+								+ "{\"id\":95,\"name\":\"Joe Ruffalo\"},{\"id\":96,\"name\":\"Steve Fargnoli\"}],\"winner\":true}]"));
 	}
 
 	@Test
 	public void testaGetMostWinnersPerYear() throws Exception {
-		carregaBase();
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/textoit/winners/year"))
 				.andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content().string(
 						"[{\"winnerCount\":2,\"year\":1986},{\"winnerCount\":2,\"year\":1990},{\"winnerCount\":2,\"year\":2015}]"));
@@ -58,7 +57,6 @@ public class RestControllerTest extends AppApplicationTests {
 
 	@Test
 	public void testaGetStudiosWinners() throws Exception {
-		carregaBase();
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/textoit/winners/studio"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.content()
@@ -79,7 +77,6 @@ public class RestControllerTest extends AppApplicationTests {
 
 	@Test
 	public void testaGetIntervalProducersWinners() throws Exception {
-		carregaBase();
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/textoit/winners/producer/interval"))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.content()
@@ -87,18 +84,9 @@ public class RestControllerTest extends AppApplicationTests {
 								+ "\"max\":{\"producer\":\"Matthew Vaughn\",\"interval\":13,\"previousWin\":\"2002\",\"followingWin\":\"2015\"}}"));
 	}
 
-	@Test
-	public void testaDeleteMovieFilmeVencedor() throws Exception {
-		carregaBase();
-		this.mockMvc.perform(MockMvcRequestBuilders.delete("/textoit/movie/del").param("id", "7"))
-				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.content().string("Filme deletado com sucesso!"));
-	}
-
 	@Test(expected = FilmeVencedorException.class)
-	public void testaDeleteMovieIsOK() throws Throwable {
+	public void testaDeleteMovieFilmeVencedor() throws Throwable {
 		try {
-			carregaBase();
 			this.mockMvc.perform(MockMvcRequestBuilders.delete("/textoit/movie/del").param("id", "3"));
 		} catch (Exception e) {
 			assertEquals("Filmes vencedores não podem ser excluidos!", e.getCause().getMessage());		
@@ -106,19 +94,22 @@ public class RestControllerTest extends AppApplicationTests {
 		}
 	}
 	
+	@Test
+	public void testaDeleteMovieIsOK() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.delete("/textoit/movie/del").param("id", "7"))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.content().string("Filme deletado com sucesso!"));
+	}
+	
+	
 	@Test(expected = FilmeNaoEncontradoException.class)
 	public void testaDeleteMovieFilmeNaoEncontrado() throws Throwable {
 		try {
-			carregaBase();
-			this.mockMvc.perform(MockMvcRequestBuilders.delete("/textoit/movie/del").param("id", "2"));
+			this.mockMvc.perform(MockMvcRequestBuilders.delete("/textoit/movie/del").param("id", "99999"));
 		} catch (Exception e) {
 			assertEquals("Filme não encontrado!", e.getCause().getMessage());		
 			throw e.getCause();
 		}
 	}
-
-	private void carregaBase() throws Exception {
-		this.mockMvc.perform(MockMvcRequestBuilders.get("/textoit/"));
-	}
-
+	
 }
